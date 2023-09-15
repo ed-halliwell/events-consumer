@@ -1,7 +1,7 @@
 import amqplib, { Channel } from "amqplib";
 import express, { Request, Response } from "express";
 import * as dotenv from "dotenv";
-import { EnhancedLog, RawLog } from "./src/types";
+import { EnhancedLog, RawLog } from "./types";
 
 dotenv.config();
 
@@ -28,11 +28,14 @@ const logs: EnhancedLog[] = [];
 
           console.log(` [x] Received ${JSON.stringify(log)}`);
 
+          const delayInSeconds =
+            Math.floor(new Date(Date.now()).getTime() / 1000) -
+            Math.floor(new Date(log.sentAt).getTime() / 1000);
+
           logs.push({
             receivedAt: new Date(Date.now()),
             sentAt: new Date(log.sentAt),
-            delayInSeconds:
-              new Date(Date.now()).getDate() - new Date(log.sentAt).getDate(),
+            delayInSeconds,
             message: log.message,
           });
         }
