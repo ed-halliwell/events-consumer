@@ -1,7 +1,7 @@
-import amqplib, { Channel, Message } from "amqplib";
+import amqplib, { Channel } from "amqplib";
 import express, { Request, Response } from "express";
 import * as dotenv from "dotenv";
-import { EnhancedLog, RawLog } from "./types";
+import { EnhancedLog, RawLog } from "./src/types";
 
 dotenv.config();
 
@@ -18,7 +18,7 @@ const logs: EnhancedLog[] = [];
 (async () => {
   try {
     const connection = await amqplib.connect(queueUrl ?? "amqp://localhost");
-    const channel = await connection.createChannel();
+    const channel: Channel = await connection.createChannel();
 
     await channel.consume(
       queueName,
