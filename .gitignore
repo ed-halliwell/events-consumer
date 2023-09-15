@@ -1,0 +1,83 @@
+# NOTE:
+#
+# Any changes to this file should be copied over to `.prettierignore`.
+# See that file for more details.
+#
+
+
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# Keep file alongside this project, but don't have them accidentally committed to the project
+_local/
+
+# dependencies
+node_modules/
+
+# testing
+coverage/
+
+# next.js
+.next/
+out/
+
+# production
+build/
+dist/
+
+# editors
+.vscode/*
+!.vscode/launch.json
+.idea/
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# local env files
+.env.local
+.env.development.local
+.env.development
+.env.test.local
+.env.production.local
+
+# vercel
+.vercel
+
+# package level .npmrc
+.npmrc
+
+#
+# Auto-generated types
+#
+packages/graphql-api-types/src/gql.ts
+packages/graphql-api-types/src/api.graphql
+apps/talent-portal/__generated__/**/*.tsx
+# ignore all folders, but not immediate children files
+packages/graphql-api/types/*/**/*.d.ts
+!packages/graphql-api/types/*.d.ts
+apps/talent-portal/__generated__/
+
+# ignore incremental build info
+tsconfig.tsbuildinfo
+
+# ignore erroneous workspace yarn.lock files
+./*/**/yarn.lock
+
+# ignore sensitive env vars
+**/.env
+
+# cypress
+automation/cypress/screenshots/
+automation/cypress/videos/
+automation/cypress/reports/
+
+# Sentry
+apps/talent-portal/.sentryclirc
+
+# files for importing
+opportunities.csv
