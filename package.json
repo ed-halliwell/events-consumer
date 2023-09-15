@@ -1,7 +1,7 @@
 {
   "name": "consumer",
   "version": "1.0.0",
-  "main": "src/index.ts",
+  "main": "src/server.ts",
   "license": "MIT",
   "scripts": {
     "build": "tsc",
