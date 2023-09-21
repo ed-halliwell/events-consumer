@@ -1,56 +1,38 @@
-import amqplib, { Channel } from "amqplib";
 import express, { Request, Response } from "express";
 import * as dotenv from "dotenv";
-import { EnhancedLog, RawLog } from "./types";
+import { ExampleConsumer } from "./kafka-consumer";
+import { MessageQueueConsumer } from "./rabbit-queue-consumer";
+import { store } from "./Log";
 
 dotenv.config();
 
 const port = process.env.PORT;
 const queueName = process.env.QUEUE_NAME ?? "";
-const queueUrl = process.env.QUEUE_URL ?? "";
+const queueUrl = process.env.QUEUE_URL ?? "amqp://localhost";
+const kafkaClientId = process.env.KAFKA_CLIENT_ID ?? "";
+const kafkaTopicName = process.env.KAFKA_TOPIC_NAME ?? "";
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const logs: EnhancedLog[] = [];
+// KAFKA CONSUMER
+async function connectToKafka() {
+  const kafka = new ExampleConsumer(kafkaClientId, kafkaTopicName);
+  await kafka.startConsumer();
+}
+connectToKafka();
 
-(async () => {
-  try {
-    const connection = await amqplib.connect(queueUrl ?? "amqp://localhost");
-    const channel: Channel = await connection.createChannel();
-
-    await channel.consume(
-      queueName,
-      (message) => {
-        if (message) {
-          const log: RawLog = JSON.parse(message.content.toString());
-
-          console.log(` [x] Received ${JSON.stringify(log)}`);
-
-          const delayInSeconds =
-            Math.floor(new Date(Date.now()).getTime() / 1000) -
-            Math.floor(new Date(log.sentAt).getTime() / 1000);
-
-          logs.push({
-            receivedAt: new Date(Date.now()),
-            sentAt: new Date(log.sentAt),
-            delayInSeconds,
-            message: log.message,
-          });
-        }
-      },
-      { noAck: true }
-    );
-
-    console.log(" [*] Waiting for messages. To exit press CTRL+C");
-  } catch (err) {
-    console.warn(err);
-  }
-})();
+// RABBITMQ CONSUMER
+async function connectToRabbit() {
+  const rabbit = new MessageQueueConsumer(queueName, queueUrl);
+  const channel = await rabbit.createRabbitConnection();
+  await rabbit.consumeMessages(channel);
+}
+connectToRabbit();
 
 app.get("/", async (req: Request, res: Response) => {
-  res.send(`<html><h1>Logs</h1> <p>${JSON.stringify(logs)}</p></html>`);
+  res.send(`<html><h1>Logs</h1> <p>${JSON.stringify(store)}</p></html>`);
 });
 
 app.listen(port, () => {

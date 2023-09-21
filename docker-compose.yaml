@@ -3,9 +3,10 @@ version: '3.9'
 networks:
   events:
     name: events
-
+    external: true
+      
 services:
-  producer:
+  consumer:
     container_name: events-consumer
     image: event-consumer
     build:
@@ -20,3 +21,6 @@ services:
       PORT: '4001'
       QUEUE_URL: amqps://yttbbsxm:uWrk6gowG999I6WsxPzlZlnCy5pac8TR@kangaroo.rmq.cloudamqp.com/yttbbsxm
       QUEUE_NAME: eventdriven
+      KAFKA_CLIENT_ID: my-app
+      KAFKA_TOPIC_NAME: testtopic
+      KAFKAJS_NO_PARTITIONER_WARNING: 1
