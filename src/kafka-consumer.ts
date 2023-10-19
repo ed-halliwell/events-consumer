@@ -7,7 +7,7 @@ import {
 import { Log } from "./Log";
 import { SourceEnum } from "./types";
 
-export class ExampleConsumer {
+export class MyKafkaConsumer {
   private kafkaConsumer: Consumer;
 
   private clientId: string;

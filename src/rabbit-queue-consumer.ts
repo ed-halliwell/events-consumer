@@ -2,7 +2,7 @@ import amqplib, { Channel } from "amqplib";
 import { SourceEnum } from "./types";
 import { Log } from "./Log";
 
-export class MessageQueueConsumer {
+export class MyRabbitMqConsumer {
   private queueName: string;
 
   private queueUrl: string;

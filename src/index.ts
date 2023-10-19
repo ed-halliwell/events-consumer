@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 import * as dotenv from "dotenv";
-import { ExampleConsumer } from "./kafka-consumer";
-import { MessageQueueConsumer } from "./rabbit-queue-consumer";
+import { MyKafkaConsumer } from "./kafka-consumer";
+import { MyRabbitMqConsumer } from "./rabbit-queue-consumer";
 import { store } from "./Log";
 
 dotenv.config();
@@ -18,14 +18,14 @@ app.use(express.urlencoded({ extended: true }));
 
 // KAFKA CONSUMER
 async function connectToKafka() {
-  const kafka = new ExampleConsumer(kafkaClientId, kafkaTopicName);
+  const kafka = new MyKafkaConsumer(kafkaClientId, kafkaTopicName);
   await kafka.startConsumer();
 }
 connectToKafka();
 
-// RABBITMQ CONSUMER
+// RABBIT MQ CONSUMER
 async function connectToRabbit() {
-  const rabbit = new MessageQueueConsumer(queueName, queueUrl);
+  const rabbit = new MyRabbitMqConsumer(queueName, queueUrl);
   const channel = await rabbit.createRabbitConnection();
   await rabbit.consumeMessages(channel);
 }
